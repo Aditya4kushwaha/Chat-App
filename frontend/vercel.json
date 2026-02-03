@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://chat-app-99kn.onrender.com/api/$1"
+    }
+  ]
+}
