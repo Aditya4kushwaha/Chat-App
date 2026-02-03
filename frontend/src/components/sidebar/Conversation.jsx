@@ -2,11 +2,22 @@ import { useSocketContext } from "../../context/SocketContext";
 import useConversation from "../../zustand/useConversation";
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
-	const { selectedConversation, setSelectedConversation } = useConversation();
+	const { selectedConversation, setSelectedConversation, conversationNotifications, setConversationNotifications } = useConversation();
 
 	const isSelected = selectedConversation?._id === conversation._id;
 	const { onlineUsers } = useSocketContext();
 	const isOnline = onlineUsers.includes(conversation._id);
+
+	// Calculate unread count for this specific conversation
+	const unreadCount = conversationNotifications.filter(id => id === conversation._id).length;
+
+	const handleClick = () => {
+		setSelectedConversation(conversation);
+		
+		// Clear notifications for this user
+		const updatedNotifications = conversationNotifications.filter(id => id !== conversation._id);
+		setConversationNotifications(updatedNotifications);
+	};
 
 	return (
 		<>
@@ -14,7 +25,7 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 				className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer
 				${isSelected ? "bg-sky-500" : ""}
 			`}
-				onClick={() => setSelectedConversation(conversation)}
+				onClick={handleClick}
 			>
 				<div className={`avatar ${isOnline ? "online" : ""}`}>
 					<div className='w-12 rounded-full'>
@@ -27,6 +38,17 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 						<p className='font-bold text-gray-200'>{conversation.fullName}</p>
 						<span className='text-xl'>{emoji}</span>
 					</div>
+					{unreadCount > 0 && isOnline && (
+						<div className="flex justify-between items-center mt-1">
+							<span className="text-xs text-sky-400 font-bold">New message!</span>
+							<div className="badge badge-error badge-xs text-white p-2">{unreadCount}</div>
+						</div>
+					)}
+					{unreadCount > 0 && !isOnline && (
+						<div className="flex justify-between items-center mt-1">
+							<div className="badge badge-error badge-xs text-white p-2">{unreadCount}</div>
+						</div>
+					)}
 				</div>
 			</div>
 

@@ -5,6 +5,8 @@ const useConversation = create((set) => ({
 	setSelectedConversation: (selectedConversation) => set({ selectedConversation }),
 	messages: [],
 	setMessages: (messages) => set({ messages }),
+	conversationNotifications: [], // Array to store unread messages for notification counts
+	setConversationNotifications: (conversationNotifications) => set({ conversationNotifications }),
 }));
 
 export default useConversation;

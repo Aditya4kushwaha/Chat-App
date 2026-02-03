@@ -7,7 +7,7 @@ import notificationSound from "../assets/sounds/notification.mp3";
 
 const useListenMessages = () => {
 	const { socket } = useSocketContext();
-	const { messages, setMessages, selectedConversation } = useConversation();
+	const { messages, setMessages, selectedConversation, conversationNotifications, setConversationNotifications } = useConversation();
 
 	useEffect(() => {
 		socket?.on("newMessage", (newMessage) => {
@@ -19,6 +19,8 @@ const useListenMessages = () => {
 				setMessages([...messages, newMessage]);
 			} else {
 				// Show notification if the message is from someone else
+				setConversationNotifications([...conversationNotifications, newMessage.senderId]); // Track senderId
+				
 				// Since we don't have the sender name in the message object easily (usually), 
 				// we generically say "New message received". 
 				// If newMessage has sender info in the future, we can use it.
@@ -37,6 +39,6 @@ const useListenMessages = () => {
 		});
 
 		return () => socket?.off("newMessage");
-	}, [socket, setMessages, messages, selectedConversation]);
+	}, [socket, setMessages, messages, selectedConversation, conversationNotifications, setConversationNotifications]);
 };
 export default useListenMessages;
