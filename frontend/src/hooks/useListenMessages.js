@@ -14,10 +14,29 @@ const useListenMessages = () => {
 			newMessage.shouldShake = true;
 			const sound = new Audio(notificationSound);
 			sound.play();
-			setMessages([...messages, newMessage]);
+
+			if (selectedConversation?._id === newMessage.senderId) {
+				setMessages([...messages, newMessage]);
+			} else {
+				// Show notification if the message is from someone else
+				// Since we don't have the sender name in the message object easily (usually), 
+				// we generically say "New message received". 
+				// If newMessage has sender info in the future, we can use it.
+				// Based on common practices, having a visual indicator is good.
+				import("react-hot-toast").then(({ toast }) => {
+					toast.success("New message received 🔔", {
+						position: "top-right",
+						style: {
+							borderRadius: "10px",
+							background: "#333",
+							color: "#fff",
+						},
+					});
+				});
+			}
 		});
 
 		return () => socket?.off("newMessage");
-	}, [socket, setMessages, messages]);
+	}, [socket, setMessages, messages, selectedConversation]);
 };
 export default useListenMessages;
