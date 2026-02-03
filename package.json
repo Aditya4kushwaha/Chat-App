@@ -1,16 +1,11 @@
 {
   "name": "chat-app-yt",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "start": "node backend/server.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
-  },
   "type": "module",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -20,10 +15,7 @@
     "mongoose": "^8.1.1",
     "socket.io": "^4.7.4"
   },
-  "devDependencies": {
-    "nodemon": "^3.0.3"
-  },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18"
   }
 }
