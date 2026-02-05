@@ -25,7 +25,7 @@ app.use(cookieParser());
 
 // MANUAL CORS MIDDLEWARE (Safety net)
 app.use((req, res, next) => {
-    const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+    const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "https://chat-app-three-inky-99.vercel.app"];
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
         res.setHeader("Access-Control-Allow-Origin", origin);
