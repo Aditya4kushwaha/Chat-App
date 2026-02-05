@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useConversation from "../zustand/useConversation";
 import toast from "react-hot-toast";
+import messageSentSound from "../assets/sounds/message_sent.mp3";
 
 const useSendMessage = () => {
 	const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ const useSendMessage = () => {
 			if (data.error) throw new Error(data.error);
 
 			setMessages((prev) => [...prev, data]);
+			new Audio(messageSentSound).play();
 		} catch (error) {
 			toast.error(error.message);
 		} finally {
