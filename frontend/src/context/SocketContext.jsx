@@ -28,6 +28,14 @@ export const SocketContextProvider = ({ children }) => {
 
 			setSocket(socket);
 
+			socket.on("connect", () => {
+				console.log("Socket connected:", socket.id);
+			});
+
+			socket.on("connect_error", (err) => {
+				console.log("Socket connection error:", err);
+			});
+
 			// socket.on() is used to listen to the events. can be used both on client and server side
 			socket.on("getOnlineUsers", (users) => {
 				setOnlineUsers(users);
