@@ -10,16 +10,26 @@ const useListenMessages = () => {
 	const { messages, setMessages, selectedConversation, conversationNotifications, setConversationNotifications } = useConversation();
 
 	useEffect(() => {
+        // console.log("🎧 useListenMessages effect running. Socket:", socket?.id);
 		socket?.on("newMessage", (newMessage) => {
+            console.log("📨 New Message Received in Hook:", newMessage);
 			newMessage.shouldShake = true;
 			const sound = new Audio(notificationSound);
-			sound.play();
+			try {
+				sound.play();
+			} catch (error) {
+				console.log("Error playing sound:", error);
+			}
 
+            // Using functional update to avoid stale closure issues
+            // This ensures we always append to the latest state
 			if (selectedConversation?._id === newMessage.senderId) {
-				setMessages([...messages, newMessage]);
+                console.log("✅ Message belongs to current chat. Appending...");
+				setMessages((prevMessages) => [...prevMessages, newMessage]);
 			} else {
+                console.log("🔔 Message from another user. Notification...");
 				// Show notification if the message is from someone else
-				setConversationNotifications([...conversationNotifications, newMessage.senderId]); // Track senderId
+				setConversationNotifications((prev) => [...prev, newMessage.senderId]); // Track senderId
 				
 				// Since we don't have the sender name in the message object easily (usually), 
 				// we generically say "New message received". 
@@ -39,6 +49,6 @@ const useListenMessages = () => {
 		});
 
 		return () => socket?.off("newMessage");
-	}, [socket, setMessages, messages, selectedConversation, conversationNotifications, setConversationNotifications]);
+	}, [socket, setMessages, selectedConversation, setConversationNotifications]);
 };
 export default useListenMessages;
